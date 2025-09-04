@@ -1,5 +1,7 @@
 # Warp Account Manager
 
+![Warp Account Manager](img/tr.jpg)
+
 Bu eklenti ile hesaplarınız arasında kolayca geçiş yapabilirsiniz.
 - Ban problemi yoktur
 - Özel chrome eklentisi

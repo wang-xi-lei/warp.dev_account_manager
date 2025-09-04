@@ -1,5 +1,7 @@
 # Warp Account Manager
 
+![Warp Account Manager](img/en.png)
+
 This extension allows you to easily switch between your accounts.
 - No ban issues
 - Custom chrome extension

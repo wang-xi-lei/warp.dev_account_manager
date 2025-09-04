@@ -1,0 +1,40 @@
+{
+    "manifest_version": 3,
+    "name": "Warp Account Bridge",
+    "version": "1.0",
+    "description": "Bridge extension for Warp account management",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvXIun41RYc3Ln6RQZI4xLkSzJkAlExAeg3nFLhW5cQNv44OGwglABrBlmcaDxuVQ1bSlm8MITITsUR7g+4rV/d/0BsRLr8EPnZsaek+RMQpMaLUb5O9rBGNXUzh7NhpkBGj3SIpVbj1NA/ruTZP+MoR6SlidjzJQHQXaKAVWdr+pWWJkvTU1I8IysUxKutxcVRNWiwklFQZk/C0mnBPxqvYtYsTXuq44twgIMv4jRydcf0hBAFOKNONEWG8j/hVukAROh6JV0OFNrPzxRp+CuqUynWxN8xYUyPuyzllR5xhpPVRFvgrfDqyr0CPcSuyJA96CeEIQyBnFVD65VjQATQIDAQAB",
+    "permissions": [
+        "tabs",
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://app.warp.dev/logged_in/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://app.warp.dev/logged_in/remote*",
+                "https://app.warp.dev/logged_in*",
+                "https://app.warp.dev/login*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "action": {
+        "default_title": "Warp Account Bridge"
+    },
+    "externally_connectable": {
+        "matches": [
+            "http://localhost:*/*"
+        ]
+    }
+}

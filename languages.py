@@ -9,38 +9,264 @@ class LanguageManager:
     """Çok dilli destek yöneticisi"""
 
     def __init__(self):
-        self.current_language = self.detect_system_language()
+        # 默认使用中文界面
+        self.current_language = 'zh'
         self.translations = self.load_translations()
 
     def detect_system_language(self):
-        """Sistem dilini otomatik tespit et"""
+        """系统语言自动检测"""
         try:
-            # Sistem dilini al (Python 3.15 uyumlu)
+            # 获取系统语言 (Python 3.15 兼容)
             try:
                 system_locale = locale.getlocale()[0]
             except:
-                # Fallback için eski metod
+                # Fallback 旧方法
                 import warnings
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore")
                     system_locale = locale.getdefaultlocale()[0]
 
             if system_locale:
-                # Türkçe veya Azerice ise Türkçe (büyük/küçük harf duyarsız)
                 locale_lower = system_locale.lower()
+                # 中文检测
+                if (locale_lower.startswith(('zh', 'cn')) or
+                    'chinese' in locale_lower or
+                    '中文' in locale_lower):
+                    return 'zh'
+                # 土耳其语或阿塞拜疆语检测
                 if (locale_lower.startswith(('tr', 'az')) or
                     'turkish' in locale_lower or
                     'türk' in locale_lower):
                     return 'tr'
+                # 英语检测
+                if locale_lower.startswith('en') or 'english' in locale_lower:
+                    return 'en'
 
-            # Varsayılan olarak İngilizce
-            return 'en'
+            # 默认使用中文
+            return 'zh'
         except:
-            return 'en'
+            return 'zh'
 
     def load_translations(self):
         """Çeviri dosyalarını yükle"""
         translations = {
+            'zh': {
+                # 通用
+                'app_title': 'Warp 账户管理器',
+                'yes': '是',
+                'no': '否',
+                'ok': '确定',
+                'cancel': '取消',
+                'close': '关闭',
+                'error': '错误',
+                'success': '成功',
+                'warning': '警告',
+                'info': '信息',
+
+                # 按钮
+                'proxy_start': '启动代理',
+                'proxy_stop': '停止代理',
+                'proxy_active': '代理已启用',
+                'add_account': '添加账户',
+                'refresh_limits': '刷新额度',
+                'help': '帮助',
+                'activate': '🟢 启用',
+                'deactivate': '🔴 停用',
+                'delete_account': '🗑️ 删除账户',
+                'create_account': '🌐 创建账户',
+                'add': '添加',
+                'copy_javascript': '📋 复制 JavaScript 代码',
+                'copied': '✅ 已复制！',
+                'copy_error': '❌ 复制失败！',
+                'open_certificate': '📁 打开证书文件',
+                'installation_complete': '✅ 安装完成',
+
+                # 表头
+                'current': '当前',
+                'email': '邮箱',
+                'status': '状态',
+                'limit': '额度',
+
+                # 激活按钮文本
+                'button_active': '已启用',
+                'button_inactive': '未启用',
+                'button_banned': '封禁',
+                'button_start': '开始',
+                'button_stop': '停止',
+
+                # 状态消息
+                'status_active': '启用',
+                'status_banned': '封禁',
+                'status_token_expired': '令牌已过期',
+                'status_proxy_active': ' (代理已启用)',
+                'status_error': '错误',
+                'status_na': 'N/A',
+                'status_not_updated': '未更新',
+                'status_healthy': 'healthy',
+                'status_unhealthy': 'unhealthy',
+                'status_banned_key': 'banned',
+
+                # 添加账户
+                'add_account_title': '添加账户',
+                'add_account_instruction': '在下方粘贴账户 JSON 数据：',
+                'add_account_placeholder': '在此粘贴 JSON 数据...',
+                'how_to_get_json': '❓ 如何获取 JSON 数据？',
+                'how_to_get_json_close': '❌ 关闭',
+                'json_info_title': '如何获取 JSON 数据？',
+
+                # 账户添加对话框标签
+                'tab_manual': '手动',
+                'tab_auto': '自动',
+                'manual_method_title': '手动添加 JSON',
+                'auto_method_title': '使用 Chrome 扩展自动添加',
+
+                # Chrome 扩展说明
+                'chrome_extension_title': '🌐 Chrome 扩展',
+                'chrome_extension_description': '可使用我们的 Chrome 扩展自动添加账户，方法更快更简单。',
+                'chrome_extension_step_1': '<b>步骤 1：</b> 手动安装 Chrome 扩展',
+                'chrome_extension_step_2': '<b>步骤 2：</b> 访问 Warp.dev 并创建新账户',
+                'chrome_extension_step_3': '<b>步骤 3：</b> 创建账户后，在跳转页面点击扩展按钮',
+                'chrome_extension_step_4': '<b>步骤 4：</b> 扩展会自动将账户添加到本程序',
+
+                # 获取 JSON 步骤
+                'step_1': '<b>步骤 1：</b> 打开 Warp 网站并登录',
+                'step_2': '<b>步骤 2：</b> 打开浏览器开发者控制台（F12）',
+                'step_3': '<b>步骤 3：</b> 切换到 Console 选项卡',
+                'step_4': '<b>步骤 4：</b> 将下方 JavaScript 代码粘贴到控制台',
+                'step_5': '<b>步骤 5：</b> 回车执行',
+                'step_6': '<b>步骤 6：</b> 点击页面出现的按钮',
+                'step_7': '<b>步骤 7：</b> 将复制的 JSON 粘贴到此处',
+
+                # 帮助
+                'help_title': '📖 Warp 账户管理器 - 使用指南',
+                'help_what_is': '🎯 这个软件有什么用？',
+                'help_what_is_content': '为了免费使用 Warp.dev 代码编辑器，你可以查看所创建账户之间的剩余额度，并通过“开始”按钮轻松切换。程序在每次操作中使用不同的 ID，避免被封禁。',
+                'help_how_works': '⚙️ 工作原理',
+                'help_how_works_content': '通过代理修改 Warp 编辑器的请求。使用你选择的账户信息和不同的用户 ID 执行操作。',
+                'help_how_to_use': '📝 如何使用？',
+                'help_how_to_use_content': '''<b>首次安装：</b><br>
+由于通过代理工作，首次启动时需要将指定证书安装到计算机的受信任的根证书颁发机构中。完成指引后，打开 Warp 编辑器并登录任意账户。首次必须通过编辑器登录一个账户。<br><br>
+
+<b>添加账户（两种方法）：</b><br>
+<b>1. Chrome 扩展：</b> 在 Chrome 中安装我们的扩展。在 Warp.dev 创建账户后，跳转页面会出现扩展按钮，一键自动添加账户。<br>
+<b>2. 手动方法：</b> 在创建账户页面按 F12 打开控制台，粘贴 JavaScript 代码并复制 JSON 添加到程序。<br><br>
+
+<b>Chrome 扩展安装：</b><br>
+手动安装 Chrome 扩展。扩展安装后，会在 warp.dev/logged_in/remote 页面显示自动添加账户按钮；在普通的 logged_in 页面会显示刷新页面按钮。<br><br>
+
+<b>使用：</b><br>
+要使用你添加的账户，请先启用代理。启用后，点击某个账户的“开始”按钮将其设为激活，然后继续使用 Warp 编辑器。点击“刷新额度”可即时查看各账户额度。''',
+
+                # 证书安装
+                'cert_title': '🔒 需要安装代理证书',
+                'cert_explanation': '''为确保 Warp 代理正常工作，需要将 mitmproxy 证书
+添加到受信任的根证书颁发机构中。
+
+此操作只需进行一次，不会影响系统安全。''',
+                'cert_steps': '📋 安装步骤：',
+                'cert_step_1': '<b>步骤 1：</b> 点击下方“打开证书文件”按钮',
+                'cert_step_2': '<b>步骤 2：</b> 双击打开的文件',
+                'cert_step_3': '<b>步骤 3：</b> 点击“安装证书...”按钮',
+                'cert_step_4': '<b>步骤 4：</b> 选择“本地计算机”，点击“下一步”',
+                'cert_step_5': '<b>步骤 5：</b> 选择“将所有证书放入下列存储”',
+                'cert_step_6': '<b>步骤 6：</b> 点击“浏览”按钮',
+                'cert_step_7': '<b>步骤 7：</b> 选择“受信任的根证书颁发机构”',
+                'cert_step_8': '<b>步骤 8：</b> 点击“确定”和“下一步”',
+                'cert_step_9': '<b>步骤 9：</b> 点击“完成”按钮',
+                'cert_path': '证书文件：{}',
+
+                # 自动证书安装
+                'cert_creating': '🔒 正在创建证书...',
+                'cert_created_success': '✅ 证书文件创建成功',
+                'cert_creation_failed': '❌ 证书创建失败',
+                'cert_installing': '🔒 正在检查证书安装...',
+                'cert_installed_success': '✅ 证书已自动安装',
+                'cert_install_failed': '❌ 证书安装失败 —— 可能需要管理员权限',
+                'cert_install_error': '❌ 证书安装错误：{}',
+
+                # 手动证书安装对话框
+                'cert_manual_title': '🔒 需要手动安装证书',
+                'cert_manual_explanation': '''自动安装证书失败。
+
+你需要手动安装证书。此操作只需进行一次，不会影响系统安全。''',
+                'cert_manual_path': '证书文件位置：',
+                'cert_manual_steps': '''<b>手动安装步骤：</b><br><br>
+<b>1.</b> 前往上方文件路径<br>
+<b>2.</b> 双击 <code>mitmproxy-ca-cert.cer</code> 文件<br>
+<b>3.</b> 点击“安装证书...”按钮<br>
+<b>4.</b> 选择“本地计算机”，点击“下一步”<br>
+<b>5.</b> 选择“将所有证书放入下列存储”<br>
+<b>6.</b> 点击“浏览” → 选择“受信任的根证书颁发机构”<br>
+<b>7.</b> 点击“确定” → “下一步” → “完成”''',
+                'cert_open_folder': '📁 打开证书文件夹',
+                'cert_manual_complete': '✅ 我已完成安装',
+
+                # 消息
+                'account_added_success': '账户添加成功',
+                'no_accounts_to_update': '没有可更新的账户',
+                'updating_limits': '正在更新额度...',
+                'processing_account': '正在处理：{}',
+                'refreshing_token': '正在刷新令牌：{}',
+                'accounts_updated': '已更新 {} 个账户',
+                'proxy_starting': '正在启动代理...',
+                'proxy_configuring': '正在配置 Windows 代理设置...',
+                'proxy_started': '代理已启动：{}',
+                'proxy_stopped': '代理已停止',
+                'proxy_starting_account': '正在启动代理并激活 {}...',
+                'activating_account': '正在激活账户：{}...',
+                'token_refreshing': '正在刷新令牌：{}',
+                'proxy_started_account_activated': '代理已启动并已激活 {}',
+                'windows_proxy_config_failed': 'Windows 代理设置配置失败',
+                'mitmproxy_start_failed': 'Mitmproxy 启动失败 - 请检查 8080 端口',
+                'proxy_start_error': '代理启动错误：{}',
+                'proxy_stop_error': '代理停止错误：{}',
+                'account_not_found': '未找到账户',
+                'account_banned_cannot_activate': '{} 账户已被封禁，无法激活',
+                'account_activation_error': '账户激活错误：{}',
+                'token_refresh_in_progress': '正在刷新令牌，请稍候...',
+                'token_refresh_error': '令牌刷新错误：{}',
+                'account_activated': '{} 账户已激活',
+                'account_activation_failed': '账户激活失败',
+                'proxy_unexpected_stop': '代理意外停止',
+                'account_deactivated': '{} 账户已停用',
+                'account_deleted': '已删除 {} 账户',
+                'token_renewed': '{} 令牌已更新',
+                'account_banned_detected': '⛔ 检测到 {} 账户被封禁！',
+                'token_renewal_progress': '🔄 已更新 {}/{} 个令牌',
+
+                # 错误消息
+                'invalid_json': '无效的 JSON 格式',
+                'email_not_found': '未找到邮箱',
+                'certificate_not_found': '未找到证书文件！',
+                'file_open_error': '文件打开错误：{}',
+                'proxy_start_failed': '无法启动代理 - 请检查 8080 端口',
+                'proxy_config_failed': '无法配置 Windows 代理设置',
+                'token_refresh_failed': '无法更新 {} 的令牌',
+                'account_delete_failed': '无法删除账户',
+                'proxy_unexpected_stop': '⚠️ 代理意外停止',
+                'enable_proxy_first': '请先启动代理以激活账户',
+                'limit_info_failed': '无法获取额度信息',
+                'token_renewal_failed': '⚠️ 无法更新 {} 的令牌',
+                'token_check_error': '❌ 令牌检查错误',
+
+                # 确认消息
+                'delete_account_confirm': '确定要删除“{}”账户吗？\n\n此操作不可撤销！',
+
+                # 状态栏消息
+                'default_status': '启用代理并点击账户上的开始按钮即可开始使用。',
+                'default_status_debug': '启用代理并点击账户上的开始按钮即可开始使用。（调试模式已启用）',
+
+                # 调试与控制台消息
+                'stylesheet_load_error': '样式表加载失败：{}',
+                'health_update_error': '健康状态更新错误：{}',
+                'token_update_error': '令牌更新错误：{}',
+                'account_update_error': '账户更新错误：{}',
+                'active_account_set_error': '设置激活账户错误：{}',
+                'active_account_clear_error': '清除激活账户错误：{}',
+                'account_delete_error': '删除账户错误：{}',
+                'limit_info_update_error': '额度信息更新错误：{}',
+            },
+
             'tr': {
                 # Genel
                 'app_title': 'Warp Hesap Yöneticisi',
@@ -488,9 +714,12 @@ You need to install the certificate manually. This process is done only once and
         return translations
 
     def get_text(self, key, *args):
-        """Çeviri metnini al"""
+        """获取翻译文本（带英文兜底）"""
         try:
-            text = self.translations[self.current_language].get(key, key)
+            current = self.translations.get(self.current_language, {})
+            text = current.get(key)
+            if text is None:
+                text = self.translations.get('en', {}).get(key, key)
             if args:
                 return text.format(*args)
             return text
@@ -498,9 +727,20 @@ You need to install the certificate manually. This process is done only once and
             return key
 
     def set_language(self, language_code):
-        """Dili değiştir"""
-        if language_code in self.translations:
-            self.current_language = language_code
+        """设置语言，支持常见别名（如 zh-CN -> zh）"""
+        if not language_code:
+            return False
+        code = str(language_code).lower().replace('-', '_')
+        if code in ('zh_cn', 'zh_hans', 'zh'):
+            target = 'zh'
+        elif code in ('tr_tr', 'tr'):
+            target = 'tr'
+        elif code.startswith('en'):
+            target = 'en'
+        else:
+            target = code if code in self.translations else None
+        if target in self.translations:
+            self.current_language = target
             return True
         return False
 
